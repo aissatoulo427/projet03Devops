@@ -3,7 +3,7 @@ name: CI Docker Build & Push
 on:
   push:
     branches:
-      - lab-docker
+      - master
 
 jobs:
   docker:
@@ -12,9 +12,9 @@ jobs:
     #environment: dev
 
     env:
-      IMAGE_NAME: ci-html-demo
+      IMAGE_NAME: aichalo/sitewebduprof
       IMAGE_TAG: latest
-      DOCKER_REGISTRY: moisawade
+      DOCKER_REGISTRY: aichalo
 
     steps:
       - name: Récupération du code
