@@ -24,9 +24,9 @@ jobs:
         run: |
           echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
-      # - name: Build de l’image Docker
-      #   run: |
-      #     docker build -t $DOCKER_REGISTRY/$IMAGE_NAME:$IMAGE_TAG .
+      - name: Build de l’image Docker
+        run: |
+          docker build -t $DOCKER_REGISTRY/$IMAGE_NAME:$IMAGE_TAG .
 
       # - name: Test de l’image Docker
       #   run: |
