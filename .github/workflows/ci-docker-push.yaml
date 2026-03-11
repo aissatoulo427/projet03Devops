@@ -11,7 +11,10 @@ jobs:
 
     #environment: dev
 
-
+    env:
+      IMAGE_NAME: sitewebduprof
+      IMAGE_TAG: latest
+      DOCKER_REGISTRY: aichalo
 
     steps:
       - name: Récupération du code
