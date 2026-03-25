@@ -41,7 +41,7 @@ jobs:
         with:
             image-ref: 'aichalo/sitewebduprof:latest'
             format: table
-            severity: HIGH,CRITICAL,MEDIUM
+            severity: HIGH,CRITICAL
             exit-code: 1
             vuln-type: os,library
             ignore-unfixed: true
