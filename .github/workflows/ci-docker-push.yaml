@@ -39,6 +39,6 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: utilisation du runner
+      - name: utilisation du runner self-hosted
         run: |
           echo "$(hostname) is running the self-hosted runner"
