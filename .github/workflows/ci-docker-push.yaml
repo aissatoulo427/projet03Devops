@@ -35,3 +35,10 @@ jobs:
       - name: Push de l’image Docker
         run: |
          docker push $DOCKER_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
+  runner:
+    runs-on: self-hosted
+
+    steps:
+      - name: utilisation du runner
+        run: |
+          echo "$(hostname) is running the self-hosted runner"
