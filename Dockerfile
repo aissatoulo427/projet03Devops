@@ -1,5 +1,5 @@
 # Utilisation de l'image officielle Nginx (légère)
-FROM nginx:alpine
+FROM nginx:stable-alpine3.23-slim
 
 # Copier tous les fichiers du projet dans le répertoire Nginx
 COPY index.html /usr/share/nginx/html/
