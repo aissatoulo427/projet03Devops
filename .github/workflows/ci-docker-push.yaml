@@ -54,14 +54,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Configurer kubectl (kubeconfig)
-        shell: bash
+        shell: pwsh
         run: |
-          mkdir -p "$HOME/.kube"
-          echo "${{ secrets.KUBECONFIG }}" | base64 --decode > "$HOME/.kube/config"
-          chmod 600 "$HOME/.kube/config"
+          New-Item -ItemType Directory -Force -Path "$HOME\.kube" | Out-Null
+          $decoded = [System.Convert]::FromBase64String("${{ secrets.KUBECONFIG }}")
+          [System.IO.File]::WriteAllBytes("$HOME\.kube\config", $decoded)
 
       - name: Vérifier la connexion au cluster
-        shell: bash
+        shell: pwsh
         run: |
           kubectl cluster-info
           kubectl get nodes
@@ -72,39 +72,39 @@ jobs:
           version: 'latest'
 
       - name: Ajouter le repo Bitnami
-        shell: bash
+        shell: pwsh
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo update
 
       - name: Déployer NGINX custom (Partie 3)
-        shell: bash
+        shell: pwsh
         run: |
-          helm upgrade --install my-nginx-custom bitnami/nginx \
-            -f helm/nginx-values.yaml \
+          helm upgrade --install my-nginx-custom bitnami/nginx `
+            -f helm/nginx-values.yaml `
             --wait --timeout 2m
 
       - name: Déployer Apache (Exercice 1)
-        shell: bash
+        shell: pwsh
         run: |
-          helm upgrade --install my-apache bitnami/apache \
-            -f helm/apache-values.yaml \
+          helm upgrade --install my-apache bitnami/apache `
+            -f helm/apache-values.yaml `
             --wait --timeout 2m
 
       - name: Déployer MongoDB (Exercice 3)
-        shell: bash
+        shell: pwsh
         run: |
-          helm upgrade --install my-mongodb bitnami/mongodb \
-            -f helm/mongodb-values.yaml \
+          helm upgrade --install my-mongodb bitnami/mongodb `
+            -f helm/mongodb-values.yaml `
             --wait --timeout 3m
 
       - name: Lister les releases Helm
-        shell: bash
+        shell: pwsh
         run: |
           helm list
 
       - name: Vérifier les pods déployés
-        shell: bash
+        shell: pwsh
         run: |
           kubectl get pods
           kubectl get svc
@@ -114,6 +114,6 @@ jobs:
 
     steps:
       - name: utilisation du runner self-hosted
-        shell: bash
+        shell: pwsh
         run: |
-          echo "$(hostname) is running the self-hosted runner"
+          Write-Host "$env:COMPUTERNAME is running the self-hosted runner"
