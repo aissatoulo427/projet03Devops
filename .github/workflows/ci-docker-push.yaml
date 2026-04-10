@@ -9,8 +9,6 @@ jobs:
   docker:
     runs-on: ubuntu-latest
 
-    #environment: dev
-
     env:
       IMAGE_NAME: sitewebduprof
       IMAGE_TAG: latest
@@ -24,15 +22,15 @@ jobs:
         run: |
           echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
-      - name: Build de l’image Docker
+      - name: Build de l'image Docker
         run: |
           docker build -t $DOCKER_REGISTRY/$IMAGE_NAME:$IMAGE_TAG .
 
-      - name: Test de l’image Docker
+      - name: Test de l'image Docker
         run: |
          docker image ls $DOCKER_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
 
-      - name: Push de l’image Docker
+      - name: Push de l'image Docker
         run: |
          docker push $DOCKER_REGISTRY/$IMAGE_NAME:$IMAGE_TAG
 
@@ -45,6 +43,63 @@ jobs:
             exit-code: 1
             vuln-type: os,library
             ignore-unfixed: true
+
+  helm-deploy:
+    runs-on: self-hosted
+    needs: docker
+
+    steps:
+      - name: Récupération du code
+        uses: actions/checkout@v4
+
+      - name: Configurer kubectl (kubeconfig)
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+
+      - name: Vérifier la connexion au cluster
+        run: |
+          kubectl cluster-info
+          kubectl get nodes
+
+      - name: Installer Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: 'latest'
+
+      - name: Ajouter le repo Bitnami
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo update
+
+      - name: Déployer NGINX custom (Partie 3)
+        run: |
+          helm upgrade --install my-nginx-custom bitnami/nginx \
+            -f helm/nginx-values.yaml \
+            --wait --timeout 2m
+
+      - name: Déployer Apache (Exercice 1)
+        run: |
+          helm upgrade --install my-apache bitnami/apache \
+            -f helm/apache-values.yaml \
+            --wait --timeout 2m
+
+      - name: Déployer MongoDB (Exercice 3)
+        run: |
+          helm upgrade --install my-mongodb bitnami/mongodb \
+            -f helm/mongodb-values.yaml \
+            --wait --timeout 3m
+
+      - name: Lister les releases Helm
+        run: |
+          helm list
+
+      - name: Vérifier les pods déployés
+        run: |
+          kubectl get pods
+          kubectl get svc
+
   runner:
     runs-on: self-hosted
 

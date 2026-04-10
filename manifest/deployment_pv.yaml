@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app_name
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app_name
+  template:
+    metadata:
+      labels:
+        app: app_name
+    spec:
+      containers:
+      - name: nginx
+        image: aichalo/sitewebduprof:latest
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: logs
+          mountPath: /opt/bitnami/nginx/logs
+      volumes:
+      - name: logs
+        persistentVolumeClaim:
+          claimName: app-name-logs

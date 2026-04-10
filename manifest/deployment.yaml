@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sitewebduprof
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sitewebduprof
+  template:
+    metadata:
+      labels:
+        app: sitewebduprof
+    spec:
+      containers:
+      - name: sitewebduprof
+        image: aichalo/sitewebduprof:latest
+        ports:
+        - containerPort: 8082

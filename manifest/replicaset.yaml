@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: labk8s-nginx-rs
+  labels:
+    app: labk8s-nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: labk8s-nginx
+  template:
+    metadata:
+      labels:
+        app: labk8s-nginx
+    spec:
+      containers:
+        - name: nginx
+          image: aichalo/sitewebduprof:latest
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: logs
+              mountPath: /opt/bitnami/nginx/logs
+      volumes:
+        - name: logs
+          persistentVolumeClaim:
+            claimName: nginx-logs

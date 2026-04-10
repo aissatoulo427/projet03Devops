@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app_name
+  labels:
+    app: app_name
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app_name
+  template:
+    metadata:
+      labels:
+        app: app_name
+    spec:
+      containers:
+      - name: app_name
+        image: aichalo/sitewebduprof:latest  # Remplace par ton image Docker
+        ports:
+        - containerPort: 3000
+        env:
+        - name: MESSAGE
+          valueFrom:
+            configMapKeyRef:
+              name: app-config
+              key: MESSAGE
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
