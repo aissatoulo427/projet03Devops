@@ -43,6 +43,7 @@ jobs:
             exit-code: 1
             vuln-type: os,library
             ignore-unfixed: true
+            trivyignores: .trivyignore
 
   helm-deploy:
     runs-on: self-hosted
