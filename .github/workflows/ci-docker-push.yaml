@@ -66,10 +66,9 @@ jobs:
           kubectl cluster-info
           kubectl get nodes
 
-      - name: Installer Helm
-        uses: azure/setup-helm@v4
-        with:
-          version: 'latest'
+      - name: Vérifier Helm installé
+        shell: powershell
+        run: helm version
 
       - name: Ajouter le repo Bitnami
         shell: powershell
